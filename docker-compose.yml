@@ -1,0 +1,94 @@
+version: "3"
+
+services:
+  api:
+    build:
+      context: .
+    container_name: bank-api
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./:/home/php/bank
+      - ./:/var/www
+      - ./php-local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      - database
+      - test-database
+    networks:
+      - api-network
+    environment:
+      - COMPOSER_MEMORY_LIMIT=-1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  database:
+    image: mariadb:latest
+    container_name: bank-database
+    restart: unless-stopped
+    tty: true
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$DB_DATABASE
+      - MYSQL_USER=$DB_USERNAME
+      - MYSQL_PASSWORD=$DB_PASSWORD
+    networks:
+      - api-network
+    ports:
+      - "33060:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  test-database:
+    image: mariadb:latest
+    container_name: bank-test-database
+    restart: always
+    tty: true
+    tmpfs:
+        - /var/lib/mysql
+    env_file:
+      - .env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$DB_ROOT_PASSWORD
+      - MYSQL_DATABASE=test
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=$DB_PASSWORD
+    networks:
+      - api-network
+
+  nginx:
+    image: nginx:1.17.7-alpine
+    container_name: bank-nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8081:80"
+    volumes:
+      - ./:/var/www
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+    networks:
+      - api-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: bank-phpmyadmin
+    restart: unless-stopped
+    tty: true
+    env_file:
+      - .env
+    environment:
+      - PMA_HOST=bank-database
+      - PMA_PORT=3306
+    ports:
+      - "8091:80"
+    depends_on:
+      - database
+    networks:
+      - api-network
+networks:
+  api-network:
+    driver: bridge
+

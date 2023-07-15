@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,4 +34,13 @@ Route::controller(AccountController::class)
         Route::post('/open', 'open')->name('open');
         Route::post('/money-transfer', 'moneyTransfer')->name('money-transfer');
         Route::get('{account}/balance', 'balance')->name('balance');
+    });
+
+
+Route::controller(TransactionController::class)
+    ->middleware('auth:sanctum')
+    ->prefix('transaction')
+    ->name('transaction.')
+    ->group(function () {
+        Route::get('{account}/history', 'history')->name('history');
     });

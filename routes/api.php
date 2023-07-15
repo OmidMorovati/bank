@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CustomerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,13 @@ Route::controller(CustomerController::class)
     ->group(function () {
         Route::post('/register', 'register')->name('register');
         Route::post('/login', 'login')->name('login');
+    });
+
+
+Route::controller(AccountController::class)
+    ->middleware('auth:sanctum')
+    ->prefix('account')
+    ->name('account.')
+    ->group(function () {
+        Route::post('/open', 'open')->name('open');
     });

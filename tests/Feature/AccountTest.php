@@ -64,4 +64,36 @@ class AccountTest extends TestCase
             'amount' => $transferAmount
         ]);
     }
+
+
+    /**
+     * @test
+     */
+    public function customer_can_view_own_account_balance(): void
+    {
+        /** @var Account $customerAccount */
+        $customerAccount = Account::factory()->create()->load('customer');
+
+        $response = $this->actingAs($customerAccount->customer)
+            ->get(route('account.balance', $customerAccount->id))
+            ->assertSuccessful();
+
+        $this->assertEquals($response->getContent(), $customerAccount->balance);
+    }
+
+    /**
+     * @test
+     */
+    public function customer_can_not_view_another_account_balance(): void
+    {
+        /** @var Account $customerAccount */
+        $customerAccount = Account::factory()->create()->load('customer');
+
+        /** @var Account $customerAccount */
+        $anotherAccount = Account::factory()->create()->load('customer');
+
+        $this->actingAs($customerAccount->customer)
+            ->get(route('account.balance', $anotherAccount->id))
+            ->assertSessionHasErrors();
+    }
 }

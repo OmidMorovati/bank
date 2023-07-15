@@ -32,4 +32,5 @@ Route::controller(AccountController::class)
     ->group(function () {
         Route::post('/open', 'open')->name('open');
         Route::post('/money-transfer', 'moneyTransfer')->name('money-transfer');
+        Route::get('{account}/balance', 'balance')->name('balance');
     });

@@ -31,4 +31,21 @@ class CustomerTest extends TestCase
             ['account_id' => data_get($response, 'data.accounts.0.id')]
         );
     }
+
+    /**
+     * @test
+     */
+    public function customer_can_login(): void
+    {
+        $password = fake()->password(8);
+        /** @var Customer $customer */
+        $customer = Customer::factory()->create(['password' => $password]);
+        $data['email'] = $customer->email;
+        $data['password'] = $password;
+
+        $this->post(route('customer.login'), $data)
+            ->assertSuccessful()
+            ->assertJsonPath('data.email', $data['email'])
+            ->assertJsonStructure(['data' => ['name', 'email', 'token']]);
+    }
 }

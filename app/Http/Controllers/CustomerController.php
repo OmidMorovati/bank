@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Customer\LoginRequest;
 use App\Http\Requests\Customer\RegisterRequest;
 use App\Http\Resources\Customer\RegisterResource;
 use App\Services\CustomerService;
@@ -15,5 +16,10 @@ class CustomerController extends Controller
     public function register(RegisterRequest $request): RegisterResource
     {
        return RegisterResource::make($this->customerService->register($request->validated()));
+    }
+
+    public function login(LoginRequest $request): RegisterResource
+    {
+       return RegisterResource::make($this->customerService->login($request->validated()));
     }
 }

@@ -52,4 +52,9 @@ class AccountService
 
         return $sourceModel;
     }
+
+    public function balance(int $account): int
+    {
+        return Account::query()->findOrFail($account)->balance;
+    }
 }

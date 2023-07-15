@@ -167,6 +167,12 @@ return [
         'email' => [
             'credentials' => 'The provided credentials are incorrect.',
         ],
+        'source_account' => [
+            'exist' => 'Source account does not exist or belong to you.',
+        ],
+        'target_account' => [
+            'not_in' => 'Target account can not be equal to the source account'
+        ]
     ],
 
     /*

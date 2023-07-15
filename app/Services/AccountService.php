@@ -27,4 +27,29 @@ class AccountService
         });
         return $result;
     }
+
+    public function transfer(array $validatedRequest): Account
+    {
+        /** @var Account $sourceModel */
+        $sourceModel = Account::query()->findOrFail($validatedRequest['source_account']);
+        /** @var Account $targetModel */
+        $targetModel = Account::query()->findOrFail($validatedRequest['target_account']);
+
+        DB::transaction(function () use ($validatedRequest, $sourceModel, $targetModel) {
+            $sourceModel->decrement('balance', $validatedRequest['amount']);
+            $sourceModel->transactions()->create([
+                'amount' => $validatedRequest['amount'],
+                'type' => AccountTypes::WITHDRAWAL->value,
+                'description' => AccountDescription::MONEY_TRANSFER->description()
+            ]);
+            $targetModel->increment('balance', $validatedRequest['amount']);
+            $targetModel->depositTransactions()->create([
+                'amount' => $validatedRequest['amount'],
+                'type' => AccountTypes::DEPOSIT->value,
+                'description' => AccountDescription::MONEY_TRANSFER->description()
+            ]);
+        });
+
+        return $sourceModel;
+    }
 }

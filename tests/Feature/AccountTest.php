@@ -65,6 +65,27 @@ class AccountTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     */
+    public function customer_can_not_transfer_money_from_another_account(): void
+    {
+        $balanceAmount = (int)fake()->numerify('1##000');
+        $transferAmount = (int)fake()->numerify('1###0');
+        /** @var Account $sourceAccount */
+        $sourceAccount = Account::factory()->create(['balance' => $balanceAmount])->load('customer');
+        /** @var Account $targetAccount */
+        $targetAccount = Account::factory()->create();
+        $data = [
+            'source_account' => $targetAccount->id,
+            'target_account' => $sourceAccount->id,
+            'amount' => $transferAmount
+        ];
+        $this->actingAs($sourceAccount->customer)
+            ->post(route('account.money-transfer'), $data)
+            ->assertSessionHasErrors();
+    }
+
 
     /**
      * @test

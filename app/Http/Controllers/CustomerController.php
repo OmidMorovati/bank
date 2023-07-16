@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Customer\LoginRequest;
 use App\Http\Requests\Customer\RegisterRequest;
-use App\Http\Resources\Customer\RegisterResource;
+use App\Http\Resources\Customer\CustomerResource;
 use App\Services\CustomerService;
 
 class CustomerController extends Controller
@@ -13,13 +13,13 @@ class CustomerController extends Controller
     {
     }
 
-    public function register(RegisterRequest $request): RegisterResource
+    public function register(RegisterRequest $request): CustomerResource
     {
-       return RegisterResource::make($this->customerService->register($request->validated()));
+       return CustomerResource::make($this->customerService->register($request->validated()));
     }
 
-    public function login(LoginRequest $request): RegisterResource
+    public function login(LoginRequest $request): CustomerResource
     {
-       return RegisterResource::make($this->customerService->login($request->validated()));
+       return CustomerResource::make($this->customerService->login($request->validated()));
     }
 }

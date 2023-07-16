@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Customer;
 
+use App\Http\Resources\Account\AccountResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

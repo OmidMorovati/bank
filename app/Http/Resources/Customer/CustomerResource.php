@@ -2,11 +2,12 @@
 
 namespace App\Http\Resources\Customer;
 
+use App\Http\Resources\Account\AccountResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RegisterResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,7 +16,7 @@ class RegisterResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        /** @var Customer|RegisterResource $this */
+        /** @var Customer|CustomerResource $this */
         return [
             'name' => $this->name,
             'email' => $this->email,

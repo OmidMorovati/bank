@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Account\BalanceRequest;
 use App\Http\Requests\Account\MoneyTransferRequest;
 use App\Http\Requests\Account\OpenRequest;
-use App\Http\Resources\Customer\AccountResource;
+use App\Http\Resources\Account\AccountResource;
 use App\Services\AccountService;
 
 class AccountController extends Controller

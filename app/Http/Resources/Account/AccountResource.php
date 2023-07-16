@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Customer;
+namespace App\Http\Resources\Account;
 
 use App\Models\Account;
 use Illuminate\Http\Request;
